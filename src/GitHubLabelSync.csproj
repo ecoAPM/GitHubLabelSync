@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	  <Version>0.1.0</Version>
+	  <OutputType>Exe</OutputType>
+	  <PackAsTool>true</PackAsTool>
+	  <ToolCommandName>sync-labels</ToolCommandName>
+	  <TargetFramework>net5.0</TargetFramework>
+	  <Description>Synchronize GitHub issue labels across repositories</Description>
+	  <Authors>ecoAPM LLC</Authors>
+	  <Company>ecoAPM LLC</Company>
+	  <Copyright>ecoAPM LLC</Copyright>
+	  <Product>GitHubLabelSync</Product>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageProjectUrl>https://github.com/ecoAPM/GitHubLabelSync</PackageProjectUrl>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <RepositoryUrl>https://github.com/ecoAPM/GitHubLabelSync</RepositoryUrl>
+	  <PublishRepositoryUrl>true</PublishRepositoryUrl>
+	  <IncludeSymbols>true</IncludeSymbols>
+	  <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Octokit" Version="0.50.0" />
+    <PackageReference Include="Spectre.Console" Version="0.42.0" />
+  </ItemGroup>
+</Project>
