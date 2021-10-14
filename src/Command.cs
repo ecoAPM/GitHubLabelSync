@@ -29,7 +29,7 @@ namespace GitHubLabelSync
 		private Func<StatusContext, Task> Run(Settings settings)
 			=> async ctx
 				=> await Factory
-					.App(settings.APIKey, s => _console.WriteLine(s), s => ctx.Status(s))
+					.App(settings.APIKey, s => ctx.Status(s), s => _console.WriteLine(s))
 					.Run(settings);
 	}
 }
