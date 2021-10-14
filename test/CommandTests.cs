@@ -18,7 +18,7 @@ namespace GitHubLabelSync.Tests
 			var remaining = Substitute.For<IRemainingArguments>();
 			var context = new CommandContext(remaining, "test", null);
 
-			var settings = new Settings { APIKey = "abc123" };
+			var settings = new Settings { APIKey = "abc123", Name = "ecoAPM" };
 
 			//act
 			var result = await command.ExecuteAsync(context, settings);

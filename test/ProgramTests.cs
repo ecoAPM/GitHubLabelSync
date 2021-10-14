@@ -10,7 +10,7 @@ namespace GitHubLabelSync.Tests
 		public async Task CanRunProgram()
 		{
 			//arrange
-			var args = Array.Empty<string>();
+			var args = new[] { "ecoAPM" };
 
 			//act
 			var program = Program.Main(args);
