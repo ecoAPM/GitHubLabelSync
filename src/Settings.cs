@@ -53,10 +53,8 @@ namespace GitHubLabelSync
 		public bool Delete => !NoDelete;
 
 		public override ValidationResult Validate()
-		{
-			return string.IsNullOrWhiteSpace(APIKey)
+			=> string.IsNullOrWhiteSpace(APIKey)
 				? ValidationResult.Error("GitHub API Key (Personal Access Token) is required")
 				: base.Validate();
-		}
 	}
 }
