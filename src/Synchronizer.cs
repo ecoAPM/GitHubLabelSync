@@ -70,7 +70,6 @@ namespace GitHubLabelSync
 			var labels = await _gitHub.GetLabels(repo);
 			await _gitHub.DeleteTempRepo(account, repoName);
 
-			_log($"{labels.Count} labels for {account.Login}: {LabelNames(labels)}");
 			return labels;
 		}
 
