@@ -8,7 +8,9 @@ namespace GitHubLabelSync
 	{
 		Task<IReadOnlyList<string>> GetAccess();
 		Task<Account> GetOrganization(string name);
+		Task<Account> GetCurrentUser();
 		Task<Account> GetUser(string name);
+		Task<MembershipRole?> GetRole(string user, string org);
 
 		Task<IReadOnlyList<Repository>> GetRepositoriesForOrganization(Account account);
 		Task<IReadOnlyList<Repository>> GetRepositoriesForUser(Account account);

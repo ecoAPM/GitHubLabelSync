@@ -39,7 +39,7 @@ namespace GitHubLabelSync.Tests
 			//arrange
 			var gitHub = Substitute.For<IGitHub>();
 			gitHub.GetAccess().Returns(new[] { "repo", "delete_repo" });
-			
+
 			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
 
 			//act
@@ -55,7 +55,7 @@ namespace GitHubLabelSync.Tests
 			//arrange
 			var gitHub = Substitute.For<IGitHub>();
 			gitHub.GetAccess().Returns(new[] { "public_repo", "delete_repo" });
-			
+
 			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
 
 			//act
@@ -71,11 +71,96 @@ namespace GitHubLabelSync.Tests
 			//arrange
 			var gitHub = Substitute.For<IGitHub>();
 			gitHub.GetAccess().Returns(new[] { "repo" });
-			
+
 			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
 
 			//act
 			var validation = await sync.ValidateAccess();
+
+			//assert
+			Assert.False(validation.Successful);
+		}
+
+		[Fact]
+		public async Task ValidOrgAdminReturnsSuccess()
+		{
+			//arrange
+			var gitHub = Substitute.For<IGitHub>();
+			gitHub.GetCurrentUser().Returns(new Stubs.User("SteveDesmond-ca"));
+			gitHub.GetRole("SteveDesmond-ca", "ecoAPM").Returns(MembershipRole.Admin);
+
+			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+
+			//act
+			var validation = await sync.ValidateUser(new Stubs.Organization("ecoAPM"));
+
+			//assert
+			Assert.True(validation.Successful);
+		}
+
+		[Fact]
+		public async Task NonOrgAdminFails()
+		{
+			//arrange
+			var gitHub = Substitute.For<IGitHub>();
+			gitHub.GetCurrentUser().Returns(new Stubs.User("SteveDesmond-ca"));
+			gitHub.GetRole("SteveDesmond-ca", "ecoAPM").Returns(MembershipRole.Member);
+
+			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+
+			//act
+			var validation = await sync.ValidateUser(new Stubs.Organization("ecoAPM"));
+
+			//assert
+			Assert.False(validation.Successful);
+		}
+
+		[Fact]
+		public async Task NonOrgMemberFails()
+		{
+			//arrange
+			var gitHub = Substitute.For<IGitHub>();
+			gitHub.GetCurrentUser().Returns(new Stubs.User("SteveDesmond-ca"));
+			gitHub.GetRole("SteveDesmond-ca", "ecoAPM").Returns((MembershipRole?)null);
+
+			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+
+			//act
+			var validation = await sync.ValidateUser(new Stubs.Organization("ecoAPM"));
+
+			//assert
+			Assert.False(validation.Successful);
+		}
+
+		[Fact]
+		public async Task SameUserAsTargetReturnsSuccess()
+		{
+			//arrange
+			var gitHub = Substitute.For<IGitHub>();
+			gitHub.GetCurrentUser().Returns(new Stubs.User("SteveDesmond-ca"));
+			gitHub.GetRole("SteveDesmond-ca", "ecoAPM").Returns(MembershipRole.Admin);
+
+			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+
+			//act
+			var validation = await sync.ValidateUser(new Stubs.Organization("ecoAPM"));
+
+			//assert
+			Assert.True(validation.Successful);
+		}
+
+		[Fact]
+		public async Task DifferentTargetUserFails()
+		{
+			//arrange
+			var gitHub = Substitute.For<IGitHub>();
+			gitHub.GetCurrentUser().Returns(new Stubs.User("SteveDesmond-ca"));
+			gitHub.GetRole("SteveDesmond-ca", "ecoAPM").Returns(MembershipRole.Member);
+
+			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+
+			//act
+			var validation = await sync.ValidateUser(new Stubs.User("Unit-Test"));
 
 			//assert
 			Assert.False(validation.Successful);

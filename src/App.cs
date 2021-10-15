@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Authentication;
 using System.Threading.Tasks;
+using Octokit;
 
 namespace GitHubLabelSync
 {
@@ -22,13 +23,7 @@ namespace GitHubLabelSync
 			_setStatus($"Starting...");
 			_log(settings.Name);
 
-			var validation = await _sync.ValidateAccess();
-			if(!validation.Successful)
-			{
-				throw new AuthenticationException(validation.Message);
-			}
-
-			var account = await _sync.GetAccount(settings.Name);
+			var account = await GetValidAccount(settings);
 			var repos = await _sync.GetRepositories(account);
 			var labels = await _sync.GetAccountLabels(account);
 			_log(string.Empty);
@@ -40,6 +35,25 @@ namespace GitHubLabelSync
 			}
 
 			_log("Done!");
+		}
+
+		private async Task<Account> GetValidAccount(Settings settings)
+		{
+			var access = await _sync.ValidateAccess();
+			if (!access.Successful)
+			{
+				throw new AuthenticationException(access.Message);
+			}
+
+			var account = await _sync.GetAccount(settings.Name);
+
+			var auth = await _sync.ValidateUser(account);
+			if (!auth.Successful)
+			{
+				throw new AuthenticationException(auth.Message);
+			}
+
+			return account;
 		}
 	}
 }

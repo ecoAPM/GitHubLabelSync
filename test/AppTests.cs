@@ -18,6 +18,7 @@ namespace GitHubLabelSync.Tests
 			//arrange
 			var sync = Substitute.For<ISynchronizer>();
 			sync.ValidateAccess().Returns(ValidationResult.Success());
+			sync.ValidateUser(Arg.Any<Account>()).Returns(ValidationResult.Success());
 			sync.GetRepositories(Arg.Any<Account>()).Returns(new[] { new Repository(), new Repository(), new Repository() });
 			var app = new App(sync, NoOp, NoOp);
 
@@ -32,11 +33,30 @@ namespace GitHubLabelSync.Tests
 		}
 
 		[Fact]
-		public async Task ThrowsOnValidationFailure()
+		public async Task ThrowsOnAccessValidationFailure()
 		{
 			//arrange
 			var sync = Substitute.For<ISynchronizer>();
 			sync.ValidateAccess().Returns(ValidationResult.Error(":("));
+			sync.ValidateUser(Arg.Any<Account>()).Returns(ValidationResult.Success());
+			var app = new App(sync, NoOp, NoOp);
+
+			var settings = new Settings { Name = "ecoAPM" };
+
+			//act
+			var task = app.Run(settings);
+
+			//assert
+			await Assert.ThrowsAnyAsync<Exception>(async () => await task);
+		}
+
+		[Fact]
+		public async Task ThrowsOnUserValidationFailure()
+		{
+			//arrange
+			var sync = Substitute.For<ISynchronizer>();
+			sync.ValidateAccess().Returns(ValidationResult.Success());
+			sync.ValidateUser(Arg.Any<Account>()).Returns(ValidationResult.Error(":("));
 			var app = new App(sync, NoOp, NoOp);
 
 			var settings = new Settings { Name = "ecoAPM" };

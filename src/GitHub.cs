@@ -37,12 +37,35 @@ namespace GitHubLabelSync
 			return account;
 		}
 
+		public async Task<Account> GetCurrentUser()
+		{
+			_setStatus("Finding current user...");
+			var account = await _client.User.Current();
+			_log($"{"User ID",-13} : {account.Id}");
+			return account;
+		}
+
 		public async Task<Account> GetUser(string name)
 		{
 			_setStatus($"Finding user for {name}...");
 			var account = await _client.User.Get(name);
 			_log($"{"User ID",-13} : {account.Id}");
 			return account;
+		}
+
+		public async Task<MembershipRole?> GetRole(string user, string org)
+		{
+			_setStatus($"Finding membership for {user} in {org}...");
+			try
+			{
+				var membership = await _client.Organization.Member.GetOrganizationMembership(org, user);
+				_log($"{"Role",-13} : {membership.Role}");
+				return membership.Role.Value;
+			}
+			catch
+			{
+				return null;
+			}
 		}
 
 		public async Task<IReadOnlyList<Repository>> GetRepositoriesForOrganization(Account account)

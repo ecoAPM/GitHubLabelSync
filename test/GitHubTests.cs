@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Net;
 using System.Threading.Tasks;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Octokit;
 using Xunit;
 
@@ -20,7 +21,7 @@ namespace GitHubLabelSync.Tests
 			{
 				{"X-OAuth-Scopes", "repo, delete_repo"}
 			};
-			
+
 			var http = Substitute.For<IResponse>();
 			http.Headers.Returns(headers);
 
@@ -31,7 +32,7 @@ namespace GitHubLabelSync.Tests
 			client.Connection.Get<string>(Arg.Any<Uri>(), null, null).Returns(response);
 			client.Connection.BaseAddress.Returns(new Uri("http://localhost/"));
 			var gitHub = new GitHub(client, _noop, _noop);
-		
+
 			//act
 			var access = await gitHub.GetAccess();
 
@@ -42,7 +43,7 @@ namespace GitHubLabelSync.Tests
 		}
 
 		[Fact]
-		public async Task CanGetOrganizationFromClient()
+		public async Task CanGetOrganization()
 		{
 			//arrange
 			var client = Substitute.For<IGitHubClient>();
@@ -57,7 +58,7 @@ namespace GitHubLabelSync.Tests
 		}
 
 		[Fact]
-		public async Task CanGetUserFromClient()
+		public async Task CanGetUser()
 		{
 			//arrange
 			var client = Substitute.For<IGitHubClient>();
@@ -69,6 +70,53 @@ namespace GitHubLabelSync.Tests
 
 			//assert
 			Assert.Equal("SteveDesmond-ca", account.Login);
+		}
+
+		[Fact]
+		public async Task CanGetCurrentUser()
+		{
+			//arrange
+			var client = Substitute.For<IGitHubClient>();
+			client.User.Current().Returns(new Stubs.User("SteveDesmond-ca"));
+			var gitHub = new GitHub(client, _noop, _noop);
+
+			//act
+			var account = await gitHub.GetCurrentUser();
+
+			//assert
+			Assert.Equal("SteveDesmond-ca", account.Login);
+		}
+
+		[Fact]
+		public async Task CanGetRoleForUser()
+		{
+			//arrange
+			var client = Substitute.For<IGitHubClient>();
+			var membership = new OrganizationMembership(null, new StringEnum<MembershipState>(MembershipState.Active), new StringEnum<MembershipRole>(MembershipRole.Admin), null, null, null);
+			client.Organization.Member.GetOrganizationMembership("ecoAPM", "SteveDesmond-ca").Returns(membership);
+			var gitHub = new GitHub(client, _noop, _noop);
+
+			//act
+			var role = await gitHub.GetRole("SteveDesmond-ca", "ecoAPM");
+
+			//assert
+			Assert.Equal(MembershipRole.Admin, role);
+		}
+
+		[Fact]
+		public async Task NonExistentOrgMemberReturnsNull()
+		{
+			//arrange
+			var client = Substitute.For<IGitHubClient>();
+			var membership = new OrganizationMembership(null, new StringEnum<MembershipState>(MembershipState.Active), new StringEnum<MembershipRole>(MembershipRole.Admin), null, null, null);
+			client.Organization.Member.GetOrganizationMembership("ecoAPM", "SteveDesmond-ca").Throws(new NotFoundException(":(", HttpStatusCode.NotFound));
+			var gitHub = new GitHub(client, _noop, _noop);
+
+			//act
+			var role = await gitHub.GetRole("SteveDesmond-ca", "ecoAPM");
+
+			//assert
+			Assert.Null(role);
 		}
 
 		[Fact]

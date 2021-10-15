@@ -26,23 +26,29 @@ namespace GitHubLabelSync
 		{
 			var access = await _gitHub.GetAccess();
 
-			if (!access.Any(a => a == "repo"))
-			{
-				return ValidationResult.Error("API key does not have `repo` access");
-			}
+			return access.All(a => a != "repo") ? ValidationResult.Error("API key does not have `repo` access")
+				: access.All(a => a != "delete_repo") ? ValidationResult.Error("API key does not have `delete_repo` access")
+				: ValidationResult.Success();
+		}
 
-			if (!access.Any(a => a == "delete_repo"))
-			{
-				return ValidationResult.Error("API key does not have `delete_repo` access");
-			}
+		public async Task<ValidationResult> ValidateUser(Account account)
+		{
+			var current = await _gitHub.GetCurrentUser();
 
-			return ValidationResult.Success();
+			if (account.Type == AccountType.User)
+				return current.Login == account.Login
+					? ValidationResult.Success()
+					: ValidationResult.Error($"API key for {current.Login} does not match target user {account.Login}");
+
+			var role = await _gitHub.GetRole(current.Login, account.Login);
+			return role == MembershipRole.Admin
+				? ValidationResult.Success()
+				: ValidationResult.Error($"{current.Login} is not an administrator of {account.Login}");
 		}
 
 		public async Task<Account> GetAccount(string name)
 		{
 			_setStatus($"Finding information for {name}...");
-
 			try
 			{
 				return await _gitHub.GetOrganization(name);
