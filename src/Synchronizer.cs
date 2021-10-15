@@ -26,9 +26,15 @@ namespace GitHubLabelSync
 		{
 			var access = await _gitHub.GetAccess();
 
-			return access.All(a => a != "repo") ? ValidationResult.Error("API key does not have `repo` access")
-				: access.All(a => a != "delete_repo") ? ValidationResult.Error("API key does not have `delete_repo` access")
-				: ValidationResult.Success();
+			if (access.Contains("repo") && access.Contains("delete_repo"))
+			{
+				return ValidationResult.Success();
+			}
+
+			var error = !access.Contains("repo")
+				? "API key does not have `repo` access"
+				: "API key does not have `delete_repo` access";
+			return ValidationResult.Error(error);
 		}
 
 		public async Task<ValidationResult> ValidateUser(Account account)
