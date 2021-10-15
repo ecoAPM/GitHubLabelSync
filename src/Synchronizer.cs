@@ -90,7 +90,6 @@ namespace GitHubLabelSync
 
 		public async Task SyncRepo(Repository repo, Settings settings, IReadOnlyList<Label> accountLabels)
 		{
-			_log(repo.Name);
 			var repoLabels = await _gitHub.GetLabels(repo);
 
 			ShowSynchronizedLabels(repo, accountLabels, repoLabels);

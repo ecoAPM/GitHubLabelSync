@@ -30,9 +30,11 @@ namespace GitHubLabelSync
 
 			foreach (var repo in repos)
 			{
+				_log(repo.Name);
+
 				if (repo.Archived)
 				{
-					_log($"(skipping archived {repo.Name})");
+					_log($"(skipping: repo is archived)");
 				}
 				else
 				{
