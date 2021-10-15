@@ -20,6 +20,7 @@ namespace GitHubLabelSync
 		public async Task Run(Settings settings)
 		{
 			_setStatus($"Starting...");
+			_log(settings.Name);
 
 			var validation = await _sync.ValidateAccess();
 			if(!validation.Successful)
@@ -28,11 +29,7 @@ namespace GitHubLabelSync
 			}
 
 			var account = await _sync.GetAccount(settings.Name);
-			_log(string.Empty);
-
 			var repos = await _sync.GetRepositories(account);
-			_log(string.Empty);
-
 			var labels = await _sync.GetAccountLabels(account);
 			_log(string.Empty);
 

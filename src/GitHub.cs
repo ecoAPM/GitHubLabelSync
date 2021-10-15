@@ -25,7 +25,7 @@ namespace GitHubLabelSync
 			var url = _client.Connection.BaseAddress + "user";
 			var response = await _client.Connection.Get<string>(new Uri(url), null, null);
 			var accessNames = response.HttpResponse.Headers["X-OAuth-Scopes"];
-			_log($"Access: {accessNames}");
+			_log($"{"Access",-13} : {accessNames}");
 			return accessNames.Split(",").Select(a => a.Trim()).ToArray();
 		}
 
@@ -33,7 +33,7 @@ namespace GitHubLabelSync
 		{
 			_setStatus($"Finding organization for {name}...");
 			var account = await _client.Organization.Get(name);
-			_log($"Organization ID for {name}: {account.Id}");
+			_log($"{"Org ID",-13} : {account.Id}");
 			return account;
 		}
 
@@ -41,7 +41,7 @@ namespace GitHubLabelSync
 		{
 			_setStatus($"Finding user for {name}...");
 			var account = await _client.User.Get(name);
-			_log($"User ID for {name}: {account.Id}");
+			_log($"{"User ID",-13} : {account.Id}");
 			return account;
 		}
 
@@ -50,7 +50,7 @@ namespace GitHubLabelSync
 			_setStatus($"Finding repositories for {account.Login}...");
 			var repos = await _client.Repository.GetAllForOrg(account.Login);
 			var repoNames = string.Join(", ", repos.Select(l => l.Name));
-			_log($"{repos.Count} repositories for {account.Login}: {repoNames}");
+			_log($"{repos.Count,3} {"repos",-9} : {repoNames}");
 			return repos;
 		}
 
@@ -59,7 +59,7 @@ namespace GitHubLabelSync
 			_setStatus($"Finding repositories for {account.Login}...");
 			var repos = await _client.Repository.GetAllForUser(account.Login);
 			var repoNames = string.Join(", ", repos.Select(l => l.Name));
-			_log($"{repos.Count} repositories for {account.Login}: {repoNames}");
+			_log($"{repos.Count,3} {"repos",-9} : {repoNames}");
 			return repos;
 		}
 
@@ -67,25 +67,20 @@ namespace GitHubLabelSync
 		{
 			_setStatus($"Creating temp repository {repoName}...");
 			var newRepo = new NewRepository(repoName) { Private = true };
-			var repo = await _client.Repository.Create(account.Login, newRepo);
-			_log($"Created temp repository {repoName}");
-			return repo;
+			return await _client.Repository.Create(account.Login, newRepo);
 		}
 
 		public async Task<Repository> CreateTempRepoForUser(Account account, string repoName)
 		{
 			_setStatus($"Creating temp repository {repoName}...");
 			var newRepo = new NewRepository(repoName) { Private = true };
-			var repo = await _client.Repository.Create(newRepo);
-			_log($"Created temp repository {repoName}");
-			return repo;
+			return await _client.Repository.Create(newRepo);
 		}
 
 		public async Task DeleteTempRepo(Account account, string repoName)
 		{
 			_setStatus($"Deleting temp repository {repoName}...");
 			await _client.Repository.Delete(account.Login, repoName);
-			_log($"Deleted temp repository {repoName}");
 		}
 
 		public async Task<IReadOnlyList<Label>> GetLabels(Repository repo)
@@ -93,7 +88,7 @@ namespace GitHubLabelSync
 			_setStatus($"Finding labels for {repo.Name}...");
 			var repoLabels = await _client.Issue.Labels.GetAllForRepository(repo.Id);
 			var repoLabelNames = string.Join(", ", repoLabels.Select(l => l.Name));
-			_log($"{repoLabels.Count,2} labels   : {repoLabelNames}");
+			_log($"{repoLabels.Count,3} {"labels",-9} : {repoLabelNames}");
 			return repoLabels;
 		}
 

@@ -49,7 +49,6 @@ namespace GitHubLabelSync
 			}
 			catch
 			{
-				_log($"{name} is not an organization");
 				return await _gitHub.GetUser(name);
 			}
 		}
@@ -106,14 +105,14 @@ namespace GitHubLabelSync
 		{
 			_setStatus($"Finding synchronized labels in {repo.Name}...");
 			var matchingLabels = accountLabels.Where(al => repoLabels.Any(rl => Matching(al, rl))).ToArray();
-			_log($"{matchingLabels.Length,2} sync'd   : {LabelNames(matchingLabels)}");
+			_log($"{matchingLabels.Length,3} {"sync'd",-9} : {LabelNames(matchingLabels)}");
 		}
 
 		private IEnumerable<Label> GetLabelsToAdd(Repository repo, IEnumerable<Label> accountLabels, IEnumerable<Label> repoLabels)
 		{
 			_setStatus($"Finding labels to add to {repo.Name}...");
 			var newLabels = accountLabels.Where(al => repoLabels.All(rl => rl.Name != al.Name && rl.Description != al.Description)).ToArray();
-			_log($"{newLabels.Length,2} to add   : {LabelNames(newLabels)}");
+			_log($"{newLabels.Length,3} {"to add",-9} : {LabelNames(newLabels)}");
 			return newLabels;
 		}
 
@@ -121,7 +120,7 @@ namespace GitHubLabelSync
 		{
 			_setStatus($"Finding labels to edit in {repo.Name}...");
 			var editLabels = accountLabels.Where(al => repoLabels.Any(rl => NeedsUpdating(al, rl))).ToArray();
-			_log($"{editLabels.Length,2} to edit  : {LabelNames(editLabels)}");
+			_log($"{editLabels.Length,3} {"to edit",-9} : {LabelNames(editLabels)}");
 			return editLabels;
 		}
 
@@ -129,7 +128,7 @@ namespace GitHubLabelSync
 		{
 			_setStatus($"Finding labels to delete from {repo.Name}...");
 			var oldLabels = repoLabels.Where(rl => accountLabels.All(al => al.Name != rl.Name && al.Description != rl.Description)).ToArray();
-			_log($"{oldLabels.Length,2} to delete: {LabelNames(oldLabels)}");
+			_log($"{oldLabels.Length,3} {"to delete",-9} : {LabelNames(oldLabels)}");
 			return oldLabels;
 		}
 
