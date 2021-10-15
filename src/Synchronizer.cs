@@ -124,7 +124,10 @@ namespace GitHubLabelSync
 		private IEnumerable<Label> GetLabelsToAdd(Repository repo, IEnumerable<Label> accountLabels, IEnumerable<Label> repoLabels)
 		{
 			_setStatus($"Finding labels to add to {repo.Name}...");
-			var newLabels = accountLabels.Where(al => repoLabels.All(rl => rl.Name != al.Name && rl.Description != al.Description)).ToArray();
+			var newLabels = accountLabels.Where(al => repoLabels
+					.All(rl => !string.Equals(rl.Name, al.Name, StringComparison.CurrentCultureIgnoreCase)
+					           && !string.Equals(rl.Description, al.Description, StringComparison.CurrentCultureIgnoreCase)))
+				.ToArray();
 			_log($"{newLabels.Length,3} {"to add",-9} : {LabelNames(newLabels)}");
 			return newLabels;
 		}
@@ -140,7 +143,10 @@ namespace GitHubLabelSync
 		private IEnumerable<Label> GetLabelsToDelete(Repository repo, IEnumerable<Label> accountLabels, IEnumerable<Label> repoLabels)
 		{
 			_setStatus($"Finding labels to delete from {repo.Name}...");
-			var oldLabels = repoLabels.Where(rl => accountLabels.All(al => al.Name != rl.Name && al.Description != rl.Description)).ToArray();
+			var oldLabels = repoLabels.Where(rl => accountLabels
+					.All(al => !string.Equals(al.Name, rl.Name, StringComparison.InvariantCultureIgnoreCase)
+					           && !string.Equals(al.Description, rl.Description, StringComparison.InvariantCultureIgnoreCase)))
+				.ToArray();
 			_log($"{oldLabels.Length,3} {"to delete",-9} : {LabelNames(oldLabels)}");
 			return oldLabels;
 		}
@@ -170,12 +176,13 @@ namespace GitHubLabelSync
 		}
 
 		private static bool Matching(Label accountLabel, Label repoLabel)
-			=> repoLabel.Name == accountLabel.Name
-			   && repoLabel.Description == accountLabel.Description
-			   && repoLabel.Color == accountLabel.Color;
+			=> string.Equals(repoLabel.Name, accountLabel.Name, StringComparison.InvariantCultureIgnoreCase)
+			   && string.Equals(repoLabel.Description, accountLabel.Description, StringComparison.InvariantCultureIgnoreCase)
+			   && string.Equals(repoLabel.Color, accountLabel.Color, StringComparison.InvariantCultureIgnoreCase);
 
 		private static bool NeedsUpdating(Label accountLabel, Label repoLabel)
-			=> accountLabel.Name == repoLabel.Name &&
-			   (accountLabel.Description != repoLabel.Description || accountLabel.Color != repoLabel.Color);
+			=> string.Equals(accountLabel.Name, repoLabel.Name, StringComparison.InvariantCultureIgnoreCase) &&
+			   (!string.Equals(accountLabel.Description, repoLabel.Description, StringComparison.InvariantCultureIgnoreCase)
+			    || !string.Equals(accountLabel.Color, repoLabel.Color, StringComparison.InvariantCultureIgnoreCase));
 	}
 }

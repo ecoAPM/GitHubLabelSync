@@ -11,24 +11,24 @@ namespace GitHubLabelSync.Tests
 	{
 		private readonly Stubs.Label[] _accountLabels =
 		{
-			new("t1", "test1", "000000"),
-			new("t2", "test2", "000000"),
-			new("t3", "test3", "000000"),
-			new("t4", "test4", "000000"),
-			new("t5", "test5", "000000"),
-			new("t6", "test6", "000000")
+			new("t1", "test1", "aaaaaa"),
+			new("t2", "test2", "bbbbbb"),
+			new("t3", "test3", "cccccc"),
+			new("t4", "test4", "dddddd"),
+			new("t5", "test5", "eeeeee"),
+			new("t6", "test6", "ffffff")
 		};
 
 		private readonly Stubs.Label[] _repoLabels =
 		{
-			new("t3", "", "000000"),
-			new("t4", "test4", "FFFFFF"),
-			new("t5", "", "FFFFFF"),
-			new("t6", "test6", "000000"),
+			new("T3", "", "cccccc"),
+			new("t4", "Test4", "eeeeee"),
+			new("T5", "", "dddddd"),
+			new("t6", "Test6", "ffffff"),
 			new("t7", "test7", "000000"),
-			new("t8", "test8", "000000"),
-			new("t9", "test9", "000000"),
-			new("t0", "test0", "000000")
+			new("t8", "test8", "111111"),
+			new("t9", "test9", "222222"),
+			new("t0", "test0", "333333")
 		};
 
 		private readonly Action<string> _noOp = _ => { };

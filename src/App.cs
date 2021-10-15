@@ -33,10 +33,12 @@ namespace GitHubLabelSync
 				if (repo.Archived)
 				{
 					_log($"(skipping archived {repo.Name})");
-					continue;
+				}
+				else
+				{
+					await _sync.SyncRepo(repo, settings, labels);
 				}
 
-				await _sync.SyncRepo(repo, settings, labels);
 				_log(string.Empty);
 			}
 
