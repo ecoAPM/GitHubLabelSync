@@ -40,7 +40,7 @@ namespace GitHubLabelSync.Tests
 			var gitHub = Substitute.For<IGitHub>();
 			gitHub.GetAccess().Returns(new[] { "repo", "delete_repo" });
 
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			//act
 			var validation = await sync.ValidateAccess();
@@ -56,7 +56,7 @@ namespace GitHubLabelSync.Tests
 			var gitHub = Substitute.For<IGitHub>();
 			gitHub.GetAccess().Returns(new[] { "public_repo", "delete_repo" });
 
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			//act
 			var validation = await sync.ValidateAccess();
@@ -72,7 +72,7 @@ namespace GitHubLabelSync.Tests
 			var gitHub = Substitute.For<IGitHub>();
 			gitHub.GetAccess().Returns(new[] { "repo" });
 
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			//act
 			var validation = await sync.ValidateAccess();
@@ -89,7 +89,7 @@ namespace GitHubLabelSync.Tests
 			gitHub.GetCurrentUser().Returns(new Stubs.User("SteveDesmond-ca"));
 			gitHub.GetRole("SteveDesmond-ca", "ecoAPM").Returns(MembershipRole.Admin);
 
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			//act
 			var validation = await sync.ValidateUser(new Stubs.Organization("ecoAPM"));
@@ -106,7 +106,7 @@ namespace GitHubLabelSync.Tests
 			gitHub.GetCurrentUser().Returns(new Stubs.User("SteveDesmond-ca"));
 			gitHub.GetRole("SteveDesmond-ca", "ecoAPM").Returns(MembershipRole.Member);
 
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			//act
 			var validation = await sync.ValidateUser(new Stubs.Organization("ecoAPM"));
@@ -123,7 +123,7 @@ namespace GitHubLabelSync.Tests
 			gitHub.GetCurrentUser().Returns(new Stubs.User("SteveDesmond-ca"));
 			gitHub.GetRole("SteveDesmond-ca", "ecoAPM").Returns((MembershipRole?)null);
 
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			//act
 			var validation = await sync.ValidateUser(new Stubs.Organization("ecoAPM"));
@@ -140,7 +140,7 @@ namespace GitHubLabelSync.Tests
 			gitHub.GetCurrentUser().Returns(new Stubs.User("SteveDesmond-ca"));
 			gitHub.GetRole("SteveDesmond-ca", "ecoAPM").Returns(MembershipRole.Admin);
 
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			//act
 			var validation = await sync.ValidateUser(new Stubs.Organization("ecoAPM"));
@@ -157,7 +157,7 @@ namespace GitHubLabelSync.Tests
 			gitHub.GetCurrentUser().Returns(new Stubs.User("SteveDesmond-ca"));
 			gitHub.GetRole("SteveDesmond-ca", "ecoAPM").Returns(MembershipRole.Member);
 
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			//act
 			var validation = await sync.ValidateUser(new Stubs.User("Unit-Test"));
@@ -173,7 +173,7 @@ namespace GitHubLabelSync.Tests
 			var gitHub = Substitute.For<IGitHub>();
 			gitHub.GetOrganization("ecoAPM").Returns(new Organization());
 			gitHub.GetUser("ecoAPM").Throws<Exception>();
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			//act
 			var account = await sync.GetAccount("ecoAPM");
@@ -189,7 +189,7 @@ namespace GitHubLabelSync.Tests
 			var gitHub = Substitute.For<IGitHub>();
 			gitHub.GetOrganization("SteveDesmond-ca").Throws<Exception>();
 			gitHub.GetUser("SteveDesmond-ca").Returns(new User());
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			//act
 			var account = await sync.GetAccount("SteveDesmond-ca");
@@ -203,7 +203,7 @@ namespace GitHubLabelSync.Tests
 		{
 			//arrange
 			var gitHub = Substitute.For<IGitHub>();
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			var account = new Stubs.Organization("ecoAPM");
 
@@ -219,7 +219,7 @@ namespace GitHubLabelSync.Tests
 		{
 			//arrange
 			var gitHub = Substitute.For<IGitHub>();
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			var account = new Stubs.User("SteveDesmond-ca");
 
@@ -236,7 +236,7 @@ namespace GitHubLabelSync.Tests
 			//arrange
 			var tempRepoName = "";
 			var gitHub = Substitute.For<IGitHub>();
-			var sync = new Synchronizer(gitHub, new Random(), _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			var account = new Stubs.Organization("ecoAPM");
 			await gitHub.CreateTempRepoForOrganization(account, Arg.Do<string>(name => tempRepoName = name));
@@ -245,7 +245,7 @@ namespace GitHubLabelSync.Tests
 			await sync.GetAccountLabels(account);
 
 			//assert
-			Assert.StartsWith("temp-label-sync-", tempRepoName);
+			Assert.StartsWith("temp-label-sync-20", tempRepoName);
 		}
 
 		[Fact]
@@ -254,7 +254,7 @@ namespace GitHubLabelSync.Tests
 			//arrange
 			var tempRepoName = "";
 			var gitHub = Substitute.For<IGitHub>();
-			var sync = new Synchronizer(gitHub, new Random(), _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			var account = new Stubs.User("SteveDesmond-ca");
 			await gitHub.CreateTempRepoForUser(account, Arg.Do<string>(name => tempRepoName = name));
@@ -263,7 +263,7 @@ namespace GitHubLabelSync.Tests
 			await sync.GetAccountLabels(account);
 
 			//assert
-			Assert.StartsWith("temp-label-sync-", tempRepoName);
+			Assert.StartsWith("temp-label-sync-20", tempRepoName);
 		}
 
 		[Fact]
@@ -272,7 +272,7 @@ namespace GitHubLabelSync.Tests
 			//arrange
 			var tempRepoName = "";
 			var gitHub = Substitute.For<IGitHub>();
-			var sync = new Synchronizer(gitHub, new Random(), _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			var account = new Stubs.Organization("ecoAPM");
 			await gitHub.DeleteTempRepo(account, Arg.Do<string>(name => tempRepoName = name));
@@ -281,7 +281,7 @@ namespace GitHubLabelSync.Tests
 			await sync.GetAccountLabels(account);
 
 			//assert
-			Assert.StartsWith("temp-label-sync-", tempRepoName);
+			Assert.StartsWith("temp-label-sync-20", tempRepoName);
 		}
 
 		[Fact]
@@ -290,7 +290,7 @@ namespace GitHubLabelSync.Tests
 			//arrange
 			var tempRepoName = "";
 			var gitHub = Substitute.For<IGitHub>();
-			var sync = new Synchronizer(gitHub, new Random(), _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			var account = new Stubs.User("SteveDesmond-ca");
 			await gitHub.DeleteTempRepo(account, Arg.Do<string>(name => tempRepoName = name));
@@ -299,7 +299,7 @@ namespace GitHubLabelSync.Tests
 			await sync.GetAccountLabels(account);
 
 			//assert
-			Assert.StartsWith("temp-label-sync-", tempRepoName);
+			Assert.StartsWith("temp-label-sync-20", tempRepoName);
 		}
 
 		[Fact]
@@ -308,7 +308,7 @@ namespace GitHubLabelSync.Tests
 			//arrange
 			var gitHub = Substitute.For<IGitHub>();
 			gitHub.GetLabels(Arg.Any<Repository>()).Returns(_repoLabels);
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			//act
 			await sync.SyncRepo(new Repository(), new Settings(), _accountLabels);
@@ -325,7 +325,7 @@ namespace GitHubLabelSync.Tests
 			//arrange
 			var gitHub = Substitute.For<IGitHub>();
 			gitHub.GetLabels(Arg.Any<Repository>()).Returns(_repoLabels);
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			var settings = new Settings { NoAdd = true };
 
@@ -344,7 +344,7 @@ namespace GitHubLabelSync.Tests
 			//arrange
 			var gitHub = Substitute.For<IGitHub>();
 			gitHub.GetLabels(Arg.Any<Repository>()).Returns(_repoLabels);
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			var settings = new Settings { NoEdit = true };
 
@@ -363,7 +363,7 @@ namespace GitHubLabelSync.Tests
 			//arrange
 			var gitHub = Substitute.For<IGitHub>();
 			gitHub.GetLabels(Arg.Any<Repository>()).Returns(_repoLabels);
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			var settings = new Settings { NoDelete = true };
 
@@ -382,7 +382,7 @@ namespace GitHubLabelSync.Tests
 			//arrange
 			var gitHub = Substitute.For<IGitHub>();
 			gitHub.GetLabels(Arg.Any<Repository>()).Returns(_repoLabels);
-			var sync = new Synchronizer(gitHub, null, _noOp, _noOp);
+			var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 			var settings = new Settings { DryRun = true };
 

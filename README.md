@@ -33,7 +33,7 @@ Good question!
 
 The GitHub API does not provide direct access to default labels, and so they are obtained by creating (and immediately deleting) a temporary private repository.
 
-You can see the code that performs these actions [here](https://github.com/ecoAPM/GitHubLabelSync/blob/main/src/Synchronizer.cs#L65-L70).
+You can see the code that performs these actions [here](https://github.com/ecoAPM/GitHubLabelSync/blob/1.0.0/src/Synchronizer.cs#L75-L83).
 
 ## Usage
 

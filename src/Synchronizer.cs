@@ -10,14 +10,12 @@ namespace GitHubLabelSync
 	public class Synchronizer : ISynchronizer
 	{
 		private readonly IGitHub _gitHub;
-		private readonly Random _random;
 		private readonly Action<string> _setStatus;
 		private readonly Action<string> _log;
 
-		public Synchronizer(IGitHub gitHub, Random random, Action<string> setStatus, Action<string> log)
+		public Synchronizer(IGitHub gitHub, Action<string> setStatus, Action<string> log)
 		{
 			_gitHub = gitHub;
-			_random = random;
 			_setStatus = setStatus;
 			_log = log;
 		}
@@ -74,10 +72,13 @@ namespace GitHubLabelSync
 		{
 			_setStatus($"Finding labels for {account.Login}...");
 
-			var repoName = $"temp-label-sync-{_random.Next()}";
+			var now = DateTime.Now.ToString("yyyyMMdd-HHmmssff");
+			var repoName = $"temp-label-sync-{now}";
+
 			var repo = account.Type == AccountType.Organization
 				? await _gitHub.CreateTempRepoForOrganization(account, repoName)
 				: await _gitHub.CreateTempRepoForUser(account, repoName);
+
 			var labels = await _gitHub.GetLabels(repo);
 			await _gitHub.DeleteTempRepo(account, repoName);
 

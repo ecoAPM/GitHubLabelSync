@@ -13,7 +13,7 @@ namespace GitHubLabelSync
 			var client = new GitHubClient(value) { Credentials = new Credentials(apiKey) };
 
 			var gitHub = new GitHub(client, setStatus, log);
-			var sync = new Synchronizer(gitHub, new Random(), setStatus, log);
+			var sync = new Synchronizer(gitHub, setStatus, log);
 			return new App(sync, setStatus, log);
 		}
 	}
