@@ -160,7 +160,7 @@ namespace GitHubLabelSync.Tests
 			await sync.GetAccountLabels(account);
 
 			//assert
-			Assert.StartsWith("label-sync-", tempRepoName);
+			Assert.StartsWith("temp-label-sync-", tempRepoName);
 		}
 
 		[Fact]
@@ -178,7 +178,7 @@ namespace GitHubLabelSync.Tests
 			await sync.GetAccountLabels(account);
 
 			//assert
-			Assert.StartsWith("label-sync-", tempRepoName);
+			Assert.StartsWith("temp-label-sync-", tempRepoName);
 		}
 
 		[Fact]
@@ -196,7 +196,7 @@ namespace GitHubLabelSync.Tests
 			await sync.GetAccountLabels(account);
 
 			//assert
-			Assert.StartsWith("label-sync-", tempRepoName);
+			Assert.StartsWith("temp-label-sync-", tempRepoName);
 		}
 
 		[Fact]
@@ -214,7 +214,7 @@ namespace GitHubLabelSync.Tests
 			await sync.GetAccountLabels(account);
 
 			//assert
-			Assert.StartsWith("label-sync-", tempRepoName);
+			Assert.StartsWith("temp-label-sync-", tempRepoName);
 		}
 
 		[Fact]

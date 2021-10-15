@@ -62,7 +62,7 @@ namespace GitHubLabelSync
 		{
 			_setStatus($"Finding labels for {account.Login}...");
 
-			var repoName = $"label-sync-{_random.Next()}";
+			var repoName = $"temp-label-sync-{_random.Next()}";
 			var repo = account.Type == AccountType.Organization
 				? await _gitHub.CreateTempRepoForOrganization(account, repoName)
 				: await _gitHub.CreateTempRepoForUser(account, repoName);
