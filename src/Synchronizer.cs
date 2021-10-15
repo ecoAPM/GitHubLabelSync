@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Octokit;
+using Spectre.Console;
 
 namespace GitHubLabelSync
 {
@@ -19,6 +20,23 @@ namespace GitHubLabelSync
 			_random = random;
 			_setStatus = setStatus;
 			_log = log;
+		}
+
+		public async Task<ValidationResult> ValidateAccess()
+		{
+			var access = await _gitHub.GetAccess();
+
+			if (!access.Any(a => a == "repo"))
+			{
+				return ValidationResult.Error("API key does not have `repo` access");
+			}
+
+			if (!access.Any(a => a == "delete_repo"))
+			{
+				return ValidationResult.Error("API key does not have `delete_repo` access");
+			}
+
+			return ValidationResult.Success();
 		}
 
 		public async Task<Account> GetAccount(string name)

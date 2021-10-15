@@ -21,7 +21,7 @@ namespace GitHubLabelSync
 			}
 			catch (Exception e)
 			{
-				_console.WriteException(e);
+				_console.WriteException(e, ExceptionFormats.ShortenEverything);
 				return 1;
 			}
 		}

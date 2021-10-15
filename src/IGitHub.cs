@@ -6,6 +6,7 @@ namespace GitHubLabelSync
 {
 	public interface IGitHub
 	{
+		Task<IReadOnlyList<string>> GetAccess();
 		Task<Account> GetOrganization(string name);
 		Task<Account> GetUser(string name);
 

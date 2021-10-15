@@ -19,6 +19,15 @@ namespace GitHubLabelSync
 			_log = log;
 		}
 
+		public async Task<IReadOnlyList<string>> GetAccess()
+		{
+			_setStatus($"Validating access...");
+			var response = await _client.Connection.Get<string>(new Uri("https://api.github.com/user"), null, null);
+			var accessNames = response.HttpResponse.Headers["X-OAuth-Scopes"];
+			_log($"Access: {accessNames}");
+			return accessNames.Split(",").Select(a => a.Trim()).ToArray();
+		}
+
 		public async Task<Account> GetOrganization(string name)
 		{
 			_setStatus($"Finding organization for {name}...");

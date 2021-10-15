@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 
 namespace GitHubLabelSync
@@ -19,6 +20,12 @@ namespace GitHubLabelSync
 		public async Task Run(Settings settings)
 		{
 			_setStatus($"Starting...");
+
+			var validation = await _sync.ValidateAccess();
+			if(!validation.Successful)
+			{
+				throw new AuthenticationException(validation.Message);
+			}
 
 			var account = await _sync.GetAccount(settings.Name);
 			_log(string.Empty);

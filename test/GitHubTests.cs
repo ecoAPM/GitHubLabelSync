@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using NSubstitute;
 using Octokit;
@@ -9,6 +11,35 @@ namespace GitHubLabelSync.Tests
 	public class GitHubTests
 	{
 		private readonly Action<string> _noop = _ => { };
+
+		[Fact]
+		public async Task CanGetAccess()
+		{
+			//arrange
+			var headers = new Dictionary<string, string>
+			{
+				{"X-OAuth-Scopes", "repo, delete_repo"}
+			};
+			
+			var http = Substitute.For<IResponse>();
+			http.Headers.Returns(headers);
+
+			var response = Substitute.For<IApiResponse<string>>();
+			response.HttpResponse.Returns(http);
+
+			var client = Substitute.For<IGitHubClient>();
+			client.Connection.Get<string>(Arg.Any<Uri>(), null, null).Returns(response);
+			
+			var gitHub = new GitHub(client, _noop, _noop);
+		
+			//act
+			var access = await gitHub.GetAccess();
+
+			//assert
+			Assert.Equal(2, access.Count);
+			Assert.Contains("repo", access);
+			Assert.Contains("delete_repo", access);
+		}
 
 		[Fact]
 		public async Task CanGetOrganizationFromClient()
