@@ -29,7 +29,7 @@ namespace GitHubLabelSync.Tests
 
 			var client = Substitute.For<IGitHubClient>();
 			client.Connection.Get<string>(Arg.Any<Uri>(), null, null).Returns(response);
-			
+			client.Connection.BaseAddress.Returns(new Uri("http://localhost/"));
 			var gitHub = new GitHub(client, _noop, _noop);
 		
 			//act
