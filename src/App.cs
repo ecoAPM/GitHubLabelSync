@@ -30,6 +30,12 @@ namespace GitHubLabelSync
 
 			foreach (var repo in repos)
 			{
+				if (repo.Archived)
+				{
+					_log($"(skipping archived {repo.Name})");
+					continue;
+				}
+
 				await _sync.SyncRepo(repo, settings, labels);
 				_log(string.Empty);
 			}

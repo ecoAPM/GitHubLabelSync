@@ -33,6 +33,25 @@ namespace GitHubLabelSync.Tests
 		}
 
 		[Fact]
+		public async Task SkipsArchivedRepos()
+		{
+			//arrange
+			var sync = Substitute.For<ISynchronizer>();
+			sync.ValidateAccess().Returns(ValidationResult.Success());
+			sync.ValidateUser(Arg.Any<Account>()).Returns(ValidationResult.Success());
+			sync.GetRepositories(Arg.Any<Account>()).Returns(new[] { new Repository(), new Stubs.ArchivedRepository(), new Repository() });
+			var app = new App(sync, NoOp, NoOp);
+
+			var settings = new Settings { Name = "ecoAPM" };
+
+			//act
+			await app.Run(settings);
+
+			//assert
+			await sync.Received(2).SyncRepo(Arg.Any<Repository>(), settings, Arg.Any<IReadOnlyList<Label>>());
+		}
+
+		[Fact]
 		public async Task ThrowsOnAccessValidationFailure()
 		{
 			//arrange
