@@ -350,4 +350,5 @@ MigrationBackup/
 .ionide/
 
 .idea/
+.vscode/
 .env
