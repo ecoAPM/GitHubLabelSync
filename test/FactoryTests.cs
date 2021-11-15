@@ -1,17 +1,16 @@
-﻿using Xunit;
+using Xunit;
 
-namespace GitHubLabelSync.Tests
+namespace GitHubLabelSync.Tests;
+
+public class FactoryTests
 {
-	public class FactoryTests
+	[Fact]
+	public void CanCreateApp()
 	{
-		[Fact]
-		public void CanCreateApp()
-		{
-			//act
-			var app = Factory.App("abc123", null, null);
+		//act
+		var app = Factory.App("abc123", null, null);
 
-			//assert
-			Assert.IsType<App>(app);
-		}
+		//assert
+		Assert.IsType<App>(app);
 	}
 }

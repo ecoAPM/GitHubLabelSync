@@ -1,30 +1,29 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using NSubstitute;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using Xunit;
 
-namespace GitHubLabelSync.Tests
+namespace GitHubLabelSync.Tests;
+
+public class CommandTests
 {
-	public class CommandTests
+	[Fact]
+	public async Task RunPassesByDefault()
 	{
-		[Fact]
-		public async Task RunPassesByDefault()
-		{
-			//arrange
-			var console = Substitute.For<IAnsiConsole>();
-			var command = new Command(console);
+		//arrange
+		var console = Substitute.For<IAnsiConsole>();
+		var command = new Command(console);
 
-			var remaining = Substitute.For<IRemainingArguments>();
-			var context = new CommandContext(remaining, "test", null);
+		var remaining = Substitute.For<IRemainingArguments>();
+		var context = new CommandContext(remaining, "test", null);
 
-			var settings = new Settings { APIKey = "abc123", Name = "ecoAPM" };
+		var settings = new Settings { APIKey = "abc123", Name = "ecoAPM" };
 
-			//act
-			var result = await command.ExecuteAsync(context, settings);
+		//act
+		var result = await command.ExecuteAsync(context, settings);
 
-			//assert
-			Assert.Equal(0, result);
-		}
+		//assert
+		Assert.Equal(0, result);
 	}
 }

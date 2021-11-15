@@ -1,23 +1,22 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace GitHubLabelSync.Tests
+namespace GitHubLabelSync.Tests;
+
+public class ProgramTests
 {
-	public class ProgramTests
+	[Fact]
+	public async Task CanRunProgram()
 	{
-		[Fact]
-		public async Task CanRunProgram()
-		{
-			//arrange
-			var args = new[] { "ecoAPM" };
+		//arrange
+		var args = new[] { "ecoAPM" };
 
-			//act
-			var program = Program.Main(args);
+		//act
+		var program = Program.Main(args);
 
-			//assert
-			await program;
-			Assert.True(program.IsCompleted);
-		}
+		//assert
+		await program;
+		Assert.True(program.IsCompleted);
 	}
 }

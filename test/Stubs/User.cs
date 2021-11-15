@@ -1,13 +1,12 @@
-﻿using Octokit;
+using Octokit;
 
-namespace GitHubLabelSync.Tests.Stubs
+namespace GitHubLabelSync.Tests.Stubs;
+
+internal class User : Octokit.User
 {
-	internal class User : Octokit.User
+	public User(string name)
 	{
-		public User(string name)
-		{
-			Type = AccountType.User;
-			Login = name;
-		}
+		Type = AccountType.User;
+		Login = name;
 	}
 }

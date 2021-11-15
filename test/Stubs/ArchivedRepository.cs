@@ -1,12 +1,11 @@
-﻿using Octokit;
+using Octokit;
 
-namespace GitHubLabelSync.Tests.Stubs
+namespace GitHubLabelSync.Tests.Stubs;
+
+public class ArchivedRepository : Repository
 {
-	public class ArchivedRepository : Repository
+	public ArchivedRepository()
 	{
-		public ArchivedRepository()
-		{
-			Archived = true;
-		}
+		Archived = true;
 	}
 }
