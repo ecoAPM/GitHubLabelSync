@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Spectre.Console.Cli;
 
 namespace GitHubLabelSync;

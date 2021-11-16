@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Spectre.Console;
 using Spectre.Console.Cli;
 

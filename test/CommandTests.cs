@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using NSubstitute;
 using Spectre.Console;
 using Spectre.Console.Cli;

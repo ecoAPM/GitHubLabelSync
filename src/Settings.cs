@@ -8,11 +8,11 @@ public class Settings : CommandSettings
 {
 	[CommandArgument(0, "<org/username>")]
 	[Description("The name of the GitHub organization or username to sync")]
-	public string Name { get; init; }
+	public string Name { get; init; } = null!;
 
 	[CommandOption("-k|--api-key")]
 	[Description("GitHub API Key (Personal Access Token)")]
-	public string APIKey { get; init; }
+	public string APIKey { get; init; } = null!;
 
 	private readonly bool _noAdd;
 
