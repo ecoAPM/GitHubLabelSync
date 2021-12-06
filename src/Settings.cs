@@ -10,6 +10,10 @@ public class Settings : CommandSettings
 	[Description("The name of the GitHub organization or username to sync")]
 	public string Name { get; init; } = null!;
 
+	[CommandOption("-f|--filter")]
+	[Description("Only sync repositories that match the given regular expression")]
+	public string[] Filters { get; init; } = Array.Empty<string>();
+
 	[CommandOption("-k|--api-key")]
 	[Description("GitHub API Key (Personal Access Token)")]
 	public string APIKey { get; init; } = null!;

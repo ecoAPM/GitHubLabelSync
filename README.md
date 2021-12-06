@@ -48,6 +48,7 @@ Individual users are limited to GitHub's default set of issue labels, but this t
 ### Options
 
 - `-k` or `--api-key`: (*required*) GitHub API Key (Personal Access Token)
+- `-f` or `--filter`: only sync repositories that match the provided regular expression
 - `-a` or `--no-add`: do not add new labels
 - `-e` or `--no-edit`: do not edit existing labels
 - `-d` or `--no-delete`: do not delete stale labels

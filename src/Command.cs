@@ -14,7 +14,7 @@ public class Command : AsyncCommand<Settings>
 	{
 		try
 		{
-			await _console.Status().StartAsync("Running...", Run(settings));
+			await _console.Status().StartAsync("Running...", async ctx => await Run(ctx, settings));
 			return 0;
 		}
 		catch (Exception e)
@@ -24,9 +24,8 @@ public class Command : AsyncCommand<Settings>
 		}
 	}
 
-	private Func<StatusContext, Task> Run(Settings settings)
-		=> async ctx
-			=> await Factory
-				.App(settings.APIKey, s => ctx.Status(s), s => _console.WriteLine(s))
-				.Run(settings);
+	private async Task Run(StatusContext ctx, Settings settings)
+		=> await Factory
+			.App(settings.APIKey, s => ctx.Status(s), s => _console.WriteLine(s))
+			.Run(settings);
 }

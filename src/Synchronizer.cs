@@ -59,7 +59,7 @@ public class Synchronizer : ISynchronizer
 		}
 	}
 
-	public async Task<IEnumerable<Repository>> GetRepositories(Account account)
+	public async Task<IReadOnlyList<Repository>> GetRepositories(Account account)
 		=> account.Type == AccountType.Organization
 			? await _gitHub.GetRepositoriesForOrganization(account)
 			: await _gitHub.GetRepositoriesForUser(account);
