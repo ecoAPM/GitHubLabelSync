@@ -1,4 +1,5 @@
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using Xunit;
@@ -31,7 +32,7 @@ public class CommandTests
 	{
 		//arrange
 		var console = Substitute.For<IAnsiConsole>();
-		console.ExclusivityMode.When(m => m.Run(Arg.Any<Func<Task<object>>>()))
+		console.ExclusivityMode.When(m => m.RunAsync(Arg.Any<Func<Task<object>>>()))
 			.Do(_ => throw new Exception());
 		var command = new Command(console);
 
