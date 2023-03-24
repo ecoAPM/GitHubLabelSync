@@ -27,8 +27,12 @@ public class App
 		var labels = await _sync.GetAccountLabels(account);
 		_log(string.Empty);
 
-		var filteredRepos = settings.Filters.Any()
-			? allRepos.Where(r => settings.Filters.Any(f => new Regex(f).IsMatch(r.Name)))
+		var regexFilters = settings.Filters
+			.Select(f => new Regex(f, RegexOptions.None, TimeSpan.FromSeconds(1)))
+			.ToArray();
+
+		var filteredRepos = regexFilters.Any()
+			? allRepos.Where(r => regexFilters.Any(f => f.IsMatch(r.Name)))
 			: allRepos;
 
 		var repos = filteredRepos.ToArray();
