@@ -75,10 +75,16 @@ public class Synchronizer : ISynchronizer
 			? await _gitHub.CreateTempRepoForOrganization(account, repoName)
 			: await _gitHub.CreateTempRepoForUser(account, repoName);
 
-		var labels = await _gitHub.GetLabels(repo);
+		var originalLabels = await _gitHub.GetLabels(repo);
+		var latestLabels = await _gitHub.GetLabels(repo);
+		while (originalLabels.Count != latestLabels.Count)
+		{
+			originalLabels = latestLabels;
+			latestLabels = await _gitHub.GetLabels(repo);
+		}
 		await _gitHub.DeleteTempRepo(account, repoName);
 
-		return labels;
+		return latestLabels;
 	}
 
 	private static string LabelNames(IEnumerable<Label> labels)

@@ -30,6 +30,7 @@ public class SynchronizerTests
 		};
 
 	private readonly Action<string> _noOp = _ => { };
+	private static readonly Stubs.Label EmptyLabel = new Stubs.Label(string.Empty, string.Empty, string.Empty);
 
 	[Fact]
 	public async Task ValidAccessReturnsSuccess()
@@ -298,6 +299,28 @@ public class SynchronizerTests
 
 		//assert
 		Assert.StartsWith("temp-label-sync-20", tempRepoName);
+	}
+
+	[Fact]
+	public async Task GettingAccountLabelsWaitsUntilAllLabelsHaveBeenCreated()
+	{
+		//arrange
+		var gitHub = Substitute.For<IGitHub>();
+		var sync = new Synchronizer(gitHub, _noOp, _noOp);
+
+		var account = new Stubs.Organization("ecoAPM");
+		gitHub.GetLabels(Arg.Any<Repository>()).Returns(
+			new [] { EmptyLabel },
+			new [] { EmptyLabel, EmptyLabel },
+			new [] { EmptyLabel, EmptyLabel, EmptyLabel },
+			new [] { EmptyLabel, EmptyLabel, EmptyLabel }
+			);
+
+		//act
+		var labels = await sync.GetAccountLabels(account);
+
+		//assert
+		Assert.Equal(3, labels.Count);
 	}
 
 	[Fact]
