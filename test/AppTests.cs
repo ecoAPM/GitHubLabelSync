@@ -118,10 +118,10 @@ public class AppTests
 		var settings = new Settings { Name = "ecoAPM" };
 
 		//act
-		var task = app.Run(settings);
+		async Task task() => await app.Run(settings);
 
 		//assert
-		await Assert.ThrowsAnyAsync<Exception>(async () => await task);
+		await Assert.ThrowsAnyAsync<Exception>(task);
 	}
 
 	[Fact]
@@ -136,9 +136,9 @@ public class AppTests
 		var settings = new Settings { Name = "ecoAPM" };
 
 		//act
-		var task = app.Run(settings);
+		async Task task() => await app.Run(settings);
 
 		//assert
-		await Assert.ThrowsAnyAsync<Exception>(async () => await task);
+		await Assert.ThrowsAnyAsync<Exception>(task);
 	}
 }
