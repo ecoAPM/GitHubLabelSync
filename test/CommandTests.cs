@@ -1,5 +1,4 @@
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using Xunit;
@@ -16,7 +15,7 @@ public class CommandTests
 		var command = new Command(console);
 
 		var remaining = Substitute.For<IRemainingArguments>();
-		var context = new CommandContext(remaining, "test", null);
+		var context = new CommandContext([], remaining, "test", null);
 
 		var settings = new Settings { APIKey = "abc123", Name = "ecoAPM" };
 
@@ -37,7 +36,7 @@ public class CommandTests
 		var command = new Command(console);
 
 		var remaining = Substitute.For<IRemainingArguments>();
-		var context = new CommandContext(remaining, "test", null);
+		var context = new CommandContext([], remaining, "test", null);
 
 		var settings = new Settings { APIKey = "abc123", Name = "ecoAPM" };
 
