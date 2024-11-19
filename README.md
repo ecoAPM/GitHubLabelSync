@@ -12,7 +12,7 @@ Synchronize GitHub issue labels across repositories
 
 ## Requirements
 
-- .NET 8 SDK
+- .NET SDK
 
 ## Installation
 
