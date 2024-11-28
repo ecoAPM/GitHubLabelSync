@@ -122,7 +122,7 @@ public class Synchronizer : ISynchronizer
 		_log($"{matchingLabels.Length,3} {"sync'd",-9} : {LabelNames(matchingLabels)}");
 	}
 
-	private IEnumerable<Label> GetLabelsToAdd(Repository repo, IEnumerable<Label> accountLabels, IEnumerable<Label> repoLabels)
+	private Label[] GetLabelsToAdd(Repository repo, IEnumerable<Label> accountLabels, IEnumerable<Label> repoLabels)
 	{
 		_setStatus($"Finding labels to add to {repo.Name}...");
 		var newLabels = accountLabels.Where(al => repoLabels
@@ -133,7 +133,7 @@ public class Synchronizer : ISynchronizer
 		return newLabels;
 	}
 
-	private IEnumerable<Label> GetLabelsToEdit(Repository repo, IEnumerable<Label> accountLabels, IEnumerable<Label> repoLabels)
+	private Label[] GetLabelsToEdit(Repository repo, IEnumerable<Label> accountLabels, IEnumerable<Label> repoLabels)
 	{
 		_setStatus($"Finding labels to edit in {repo.Name}...");
 		var editLabels = accountLabels.Where(al => repoLabels.Any(rl => NeedsUpdating(al, rl))).ToArray();
@@ -141,7 +141,7 @@ public class Synchronizer : ISynchronizer
 		return editLabels;
 	}
 
-	private IEnumerable<Label> GetLabelsToDelete(Repository repo, IEnumerable<Label> accountLabels, IEnumerable<Label> repoLabels)
+	private Label[] GetLabelsToDelete(Repository repo, IEnumerable<Label> accountLabels, IEnumerable<Label> repoLabels)
 	{
 		_setStatus($"Finding labels to delete from {repo.Name}...");
 		var oldLabels = repoLabels.Where(rl => accountLabels

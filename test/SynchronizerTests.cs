@@ -7,7 +7,7 @@ namespace GitHubLabelSync.Tests;
 
 public class SynchronizerTests
 {
-	private readonly Stubs.Label[] _accountLabels =
+	private static readonly Stubs.Label[] AccountLabels =
 	{
 			new("t1", "test1", "aaaaaa"),
 			new("t2", "test2", "bbbbbb"),
@@ -17,7 +17,7 @@ public class SynchronizerTests
 			new("t6", "test6", "ffffff")
 		};
 
-	private readonly Stubs.Label[] _repoLabels =
+	private static readonly Stubs.Label[] RepoLabels =
 	{
 			new("T3", "", "cccccc"),
 			new("t4", "Test4", "eeeeee"),
@@ -30,14 +30,18 @@ public class SynchronizerTests
 		};
 
 	private readonly Action<string> _noOp = _ => { };
-	private static readonly Stubs.Label EmptyLabel = new Stubs.Label(string.Empty, string.Empty, string.Empty);
+	private static readonly Stubs.Label EmptyLabel = new(string.Empty, string.Empty, string.Empty);
+
+	private static readonly string[] ReadWriteAccess = ["repo", "delete_repo"];
+	private static readonly string[] PublicOnlyReadWriteAccess = ["public_repo", "delete_repo"];
+	private static readonly string[] ReadOnlyAccess = ["repo"];
 
 	[Fact]
 	public async Task ValidAccessReturnsSuccess()
 	{
 		//arrange
 		var gitHub = Substitute.For<IGitHub>();
-		gitHub.GetAccess().Returns(new[] { "repo", "delete_repo" });
+		gitHub.GetAccess().Returns(ReadWriteAccess);
 
 		var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
@@ -53,7 +57,7 @@ public class SynchronizerTests
 	{
 		//arrange
 		var gitHub = Substitute.For<IGitHub>();
-		gitHub.GetAccess().Returns(new[] { "public_repo", "delete_repo" });
+		gitHub.GetAccess().Returns(PublicOnlyReadWriteAccess);
 
 		var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
@@ -69,7 +73,7 @@ public class SynchronizerTests
 	{
 		//arrange
 		var gitHub = Substitute.For<IGitHub>();
-		gitHub.GetAccess().Returns(new[] { "repo" });
+		gitHub.GetAccess().Returns(ReadOnlyAccess);
 
 		var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
@@ -328,11 +332,11 @@ public class SynchronizerTests
 	{
 		//arrange
 		var gitHub = Substitute.For<IGitHub>();
-		gitHub.GetLabels(Arg.Any<Repository>()).Returns(_repoLabels);
+		gitHub.GetLabels(Arg.Any<Repository>()).Returns(RepoLabels);
 		var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 		//act
-		await sync.SyncRepo(new Repository(), new Settings(), _accountLabels);
+		await sync.SyncRepo(new Repository(), new Settings(), AccountLabels);
 
 		//assert
 		await gitHub.Received(2).AddLabel(Arg.Any<Repository>(), Arg.Any<Label>());
@@ -345,13 +349,13 @@ public class SynchronizerTests
 	{
 		//arrange
 		var gitHub = Substitute.For<IGitHub>();
-		gitHub.GetLabels(Arg.Any<Repository>()).Returns(_repoLabels);
+		gitHub.GetLabels(Arg.Any<Repository>()).Returns(RepoLabels);
 		var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 		var settings = new Settings { NoAdd = true };
 
 		//act
-		await sync.SyncRepo(new Repository(), settings, _accountLabels);
+		await sync.SyncRepo(new Repository(), settings, AccountLabels);
 
 		//assert
 		await gitHub.DidNotReceive().AddLabel(Arg.Any<Repository>(), Arg.Any<Label>());
@@ -364,13 +368,13 @@ public class SynchronizerTests
 	{
 		//arrange
 		var gitHub = Substitute.For<IGitHub>();
-		gitHub.GetLabels(Arg.Any<Repository>()).Returns(_repoLabels);
+		gitHub.GetLabels(Arg.Any<Repository>()).Returns(RepoLabels);
 		var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 		var settings = new Settings { NoEdit = true };
 
 		//act
-		await sync.SyncRepo(new Repository(), settings, _accountLabels);
+		await sync.SyncRepo(new Repository(), settings, AccountLabels);
 
 		//assert
 		await gitHub.Received(2).AddLabel(Arg.Any<Repository>(), Arg.Any<Label>());
@@ -383,13 +387,13 @@ public class SynchronizerTests
 	{
 		//arrange
 		var gitHub = Substitute.For<IGitHub>();
-		gitHub.GetLabels(Arg.Any<Repository>()).Returns(_repoLabels);
+		gitHub.GetLabels(Arg.Any<Repository>()).Returns(RepoLabels);
 		var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 		var settings = new Settings { NoDelete = true };
 
 		//act
-		await sync.SyncRepo(new Repository(), settings, _accountLabels);
+		await sync.SyncRepo(new Repository(), settings, AccountLabels);
 
 		//assert
 		await gitHub.Received(2).AddLabel(Arg.Any<Repository>(), Arg.Any<Label>());
@@ -402,13 +406,13 @@ public class SynchronizerTests
 	{
 		//arrange
 		var gitHub = Substitute.For<IGitHub>();
-		gitHub.GetLabels(Arg.Any<Repository>()).Returns(_repoLabels);
+		gitHub.GetLabels(Arg.Any<Repository>()).Returns(RepoLabels);
 		var sync = new Synchronizer(gitHub, _noOp, _noOp);
 
 		var settings = new Settings { DryRun = true };
 
 		//act
-		await sync.SyncRepo(new Repository(), settings, _accountLabels);
+		await sync.SyncRepo(new Repository(), settings, AccountLabels);
 
 		//assert
 		await gitHub.DidNotReceive().AddLabel(Arg.Any<Repository>(), Arg.Any<Label>());

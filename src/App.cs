@@ -31,12 +31,12 @@ public class App
 			.Select(f => new Regex(f, RegexOptions.None, TimeSpan.FromSeconds(1)))
 			.ToArray();
 
-		var filteredRepos = regexFilters.Any()
+		var filteredRepos = regexFilters.Length != 0
 			? allRepos.Where(r => regexFilters.Any(f => f.IsMatch(r.Name)))
 			: allRepos;
 
 		var repos = filteredRepos.ToArray();
-		if (!repos.Any())
+		if (repos.Length == 0)
 		{
 			_log("(no repositories to sync)");
 		}
