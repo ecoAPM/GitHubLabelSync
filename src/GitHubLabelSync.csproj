@@ -22,7 +22,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Octokit" Version="14.0.0"/>
-		<PackageReference Include="Spectre.Console.Cli" Version="0.50.0"/>
+		<PackageReference Include="Spectre.Console.Cli" Version="0.52.0"/>
 		<None Include="../README.md" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="."/>
 	</ItemGroup>
 </Project>
