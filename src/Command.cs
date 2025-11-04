@@ -10,7 +10,10 @@ public class Command : AsyncCommand<Settings>
 	public Command(IAnsiConsole console)
 		=> _console = console;
 
-	public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+	public async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+		=> await ExecuteAsync(context, settings, CancellationToken.None);
+
+	public override async Task<int> ExecuteAsync(CommandContext context, Settings settings, CancellationToken cancellationToken)
 	{
 		try
 		{
