@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Version>3.0.0</Version>
+		<Version>4.0.0</Version>
 		<OutputType>Exe</OutputType>
 		<PackAsTool>true</PackAsTool>
 		<ToolCommandName>sync-labels</ToolCommandName>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Description>Synchronize GitHub issue labels across repositories</Description>
 		<Authors>ecoAPM LLC</Authors>
 		<Company>ecoAPM LLC</Company>
